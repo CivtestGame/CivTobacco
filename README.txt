@@ -1,17 +1,20 @@
-====CivTobacco===
-Version 1.0
+====Tobbaco===
+Version 1.01
 
-Note:This is the Civtest version
+Adds tobbaco plant which can be dried and turned into cigarettes, snuff or chewed
 
-Adds tobacco plant which can be turned into cigarettes
 
-leaves(harvest) ---> cook(leaves) ---> paper+leaves ---> cigarette
-leaves(harvest) ---> seeds
+leaves(harvest) ---> cook(leaves) ---> cured leaves ---> paper+cured leaves ---> cigarette
+leaves(harvest) ---> 3 seeds
+cured leaves ---> snuff
+3 cigarette butts ---> cigarette
+
 Changelog:
 
-1.0: initial version with tobacco
+1.0: initial version with tabbaco
+1.01: adds snuff and cigarette butts and make sounds position based, add another sound for cigarette and made it produce more smoke, dried tobbaco leaves can be chewed, capitalized names
 
-Contact me at discord The32bitguy#7553 for help, suggestions and bug reports
+Contact me at discord @The32bitguy#7553 for help, suggestions and bug reports
 
 ================================================================
 License of source code and textures: LGPL v3
@@ -25,3 +28,6 @@ This version of the GNU Lesser General Public License incorporates the terms and
 
 Sounds:
 Smoke.1.ogg CC0 https://freesound.org/people/inmelo/sounds/424744/
+Smoke.2.ogg CC BY 3.0. https://freesound.org/people/M-RED/sounds/41177
+Snuff.1.ogg CC0 https://freesound.org/people/uwesoundboiz/sounds/60382/
+Chew.1.ogg CC0 https://freesound.org/people/jontahontas/sounds/91980/
