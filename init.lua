@@ -8,6 +8,7 @@ farming.register_plant("tobbaco:leaves", {
 	minlight = 13,
 	maxlight = default.LIGHT_MAX,
 	fertility = {"grassland", "desert"},
+        custom_growth = {optimum_heat = 75, heat_scaling = "exponential", heat_a = 10, heat_b = 1.2, heat_base_speed = 2500, variance = 500},                          
 	groups = {tobbaco = 1,flammable = 4}, --A new item group that will probably not be used for anything
 	})
 -- This item emits smoke when used
