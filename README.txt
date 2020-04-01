@@ -1,7 +1,7 @@
-====Tobbaco===
+====CivTobacco===
 Version 1.01
 
-Adds tobbaco plant which can be dried and turned into cigarettes, snuff or chewed
+Adds tobacco plant which can be dried and turned into cigarettes, snuff or chewed
 
 
 leaves(harvest) ---> cook(leaves) ---> cured leaves ---> paper+cured leaves ---> cigarette
@@ -12,7 +12,7 @@ cured leaves ---> snuff
 Changelog:
 
 1.0: initial version with tabbaco
-1.01: adds snuff and cigarette butts and make sounds position based, add another sound for cigarette and made it produce more smoke, dried tobbaco leaves can be chewed, capitalized names
+1.01: adds snuff and cigarette butts and make sounds position based, add another sound for cigarette and made it produce more smoke, dried tobacco leaves can be chewed, capitalized names
 
 Contact me at discord @The32bitguy#7553 for help, suggestions and bug reports
 
