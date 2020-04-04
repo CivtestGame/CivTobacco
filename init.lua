@@ -1,5 +1,5 @@
 
--- tobacco
+-- tobacco plant
 farming.register_plant("civtobacco:leaves", {
 	description = ("Tobacco seeds"),
 	harvest_description = ("tobacco leaves"),
@@ -17,11 +17,66 @@ minetest.register_craftitem("civtobacco:cigarette", {
     inventory_image = "civtobacco_cigarette.png",
     groups = {tobacco = 1},
     on_use = function(itemstack, player, pointed_thing)
+    --Flavour text
        minetest.chat_send_player(player:get_player_name(),"You smoke the cigarette")
-       local smokepos = player:get_pos()
+    tbsmoke(14,player:get_pos())
+    --Plays one of two sounds at the player who smoked position
+       tbsound("smoke", player:get_pos())
+-- Replaces the cigarette with a recyclable waste product
+        return "civtobacco:cigbutt"
+    end,
+})
+
+-- These can be chewed, or made into snuff or cigarettes
+minetest.register_craftitem("civtobacco:leaves_cured", {
+    description = "Dried tobacco leaves",
+    inventory_image = "civtobacco_cured.png",
+    groups = {tobacco = 1},
+    on_use = function(itemstack, player, pointed_thing)
+   --Send player message with flavour text
+    minetest.chat_send_player(player:get_player_name(),"You chew the tobacco")
+--Plays one sound at the player who chewed position
+tbsound("chew", player:get_pos())
+itemstack:take_item()
+    return itemstack
+end
+})
+
+minetest.register_craftitem("civtobacco:snuff", {
+    description = "Snuff",
+    inventory_image = "civtobacco_snuff.png",
+    groups = {tobacco = 1},
+    on_use = function(itemstack, player, pointed_thing)
+    --Send player message with flavour text
+    minetest.chat_send_player(player:get_player_name(),"You take the snuff up your nose")
+--Plays one sound at the player who snorted position
+   tbsound("snuff", player:get_pos())
+   itemstack:take_item()
+    return itemstack
+end
+})
+minetest.register_craftitem("civtobacco:cigbutt", {
+    description = "Cigarette butt",
+    inventory_image = "civtobacco_cigbutt.png",
+    groups = {tobacco = 1},
+})
+
+--Functions
+--Sound function
+function tbsound(sound,smokepos)
+minetest.sound_play(sound, {
+    pos = {x=smokepos.x, y=smokepos.y, z=smokepos.z},
+	max_hear_distance = 12,
+	gain = 5.0,
+})
+end
+
+--Smoke particle function
+function tbsmoke(particles,smokepos)
+       --Make some particles, the texture is only randomized per cigarette
        minetest.add_particlespawner({
-             amount = 16,
-             time = 1,
+             amount = particles,
+             time = 0.1,
              minpos = {x=smokepos.x, y=smokepos.y+1.5,z=smokepos.z},
              maxpos = {x=smokepos.x, y=smokepos.y+1.5,z=smokepos.z},
              minvel = {x=-0.1, y=0, z=-0.1},
@@ -36,61 +91,8 @@ minetest.register_craftitem("civtobacco:cigarette", {
              vertical = false,
              texture = "civtobacco_smoke." .. math.random(1,3) .. ".png",
        })
---Plays one of two sounds at the player who smoked position
-       minetest.sound_play("smoke", {
-                              pos = {x=smokepos.x, y=smokepos.y, z=smokepos.z},
-                              max_hear_distance = 10,
-                              gain = 6.0,
-})
--- Replaces the cigarette with a recyclable waste product
-        return "civtobacco:cigbutt"
-    end,
-})
-
--- These can be chewed, or made into snuff or cigarettes
-minetest.register_craftitem("civtobacco:leaves_cured", {
-    description = "Dried tobacco leaves",
-    inventory_image = "civtobacco_cured.png",
-    groups = {tobacco = 1},
-    on_use = function(itemstack, player, pointed_thing)
-    smokepos = player:get_pos()
-    minetest.chat_send_player(player:get_player_name(),"You chew the tobacco")
-
---Plays one of two sounds at the player who smoked position
-    minetest.sound_play("chew", {
-    pos = {x=smokepos.x, y=smokepos.y, z=smokepos.z},
-	max_hear_distance = 8,
-	gain = 5.0,
-})
-itemstack:take_item()
-    return itemstack
 end
-})
-
-minetest.register_craftitem("civtobacco:snuff", {
-    description = "Snuff",
-    inventory_image = "civtobacco_snuff.png",
-    groups = {tobacco = 1},
-    on_use = function(itemstack, player, pointed_thing)
-    smokepos = player:get_pos()
-    minetest.chat_send_player(player:get_player_name(),"You take the snuff up your nose")
-
---Plays one of two sounds at the player who smoked position
-    minetest.sound_play("snuff", {
-    pos = {x=smokepos.x, y=smokepos.y, z=smokepos.z},
-	max_hear_distance = 10,
-	gain = 6.0,
-})
-itemstack:take_item()
-    return itemstack
-end
-})
-minetest.register_craftitem("civtobacco:cigbutt", {
-    description = "Cigarette butt",
-    inventory_image = "civtobacco_cigbutt.png",
-    groups = {tobacco = 1},
-})
-
+--Crafting recipes
 --"Cook" leaves into cured versions for crafting
 minetest.register_craft({
     type = "cooking",
@@ -131,12 +133,12 @@ minetest.register_craft({
 -- Recipe to make seeds
 minetest.register_craft({
     type = "shapeless",
-    output = "civtobacco:seed_leaves 3",
+    output = "civtobacco:seed_leaves 2",
     recipe = {
         "civtobacco:leaves",
     },
 })
-
+--Enable tobacco to exist by making it drop from grass
 for i = 1, 3 do
 	minetest.override_item("default:marram_grass_"..i, {drop = {
 		max_items = 1,
