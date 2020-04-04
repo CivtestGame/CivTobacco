@@ -13,7 +13,7 @@ Changelog:
 
 1.0: initial version with tabbaco
 1.01: adds snuff and cigarette butts and make sounds position based, add another sound for cigarette and made it produce more smoke, dried tobacco leaves can be chewed, capitalized names
-1.01:Cleaned code and made repeated processes into functions
+1.02:Cleaned code and made repeated processes into functions
 Contact me at discord @The32bitguy#7553 for help, suggestions and bug reports
 
 ================================================================
