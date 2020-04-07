@@ -1,6 +1,6 @@
 
 -- tobacco plant
-farming.register_plant("civtobacco:leaves", {
+farming.register_plant("civtobacco:plant", {
 	description = ("Tobacco seeds"),
 	harvest_description = ("tobacco leaves"),
 	inventory_image = "civtobacco_seed.png",
@@ -28,7 +28,7 @@ minetest.register_craftitem("civtobacco:cigarette", {
 })
 
 -- These can be chewed, or made into snuff or cigarettes
-minetest.register_craftitem("civtobacco:leaves_cured", {
+minetest.register_craftitem("civtobacco:plant_cured", {
     description = "Dried tobacco leaves",
     inventory_image = "civtobacco_cured.png",
     groups = {tobacco = 1},
@@ -96,8 +96,8 @@ end
 --"Cook" leaves into cured versions for crafting
 minetest.register_craft({
     type = "cooking",
-    output = "civtobacco:leaves_cured",
-    recipe = "civtobacco:leaves",
+    output = "civtobacco:plant_cured",
+    recipe = "civtobacco:plant",
     cooktime = 30,
 })
 -- Recipe for the cigarette
@@ -105,7 +105,7 @@ minetest.register_craft({
     type = "shapeless",
     output = "civtobacco:cigarette",
     recipe = {
-        "civtobacco:leaves_cured",
+        "civtobacco:plant_cured",
         "default:paper",
     },
 })
@@ -115,7 +115,7 @@ minetest.register_craft({
     type = "shapeless",
     output = "civtobacco:snuff",
     recipe = {
-        "civtobacco:leaves_cured",
+        "civtobacco:plant_cured",
     },
 })
 
@@ -135,7 +135,7 @@ minetest.register_craft({
     type = "shapeless",
     output = "civtobacco:seed_leaves 2",
     recipe = {
-        "civtobacco:leaves",
+        "civtobacco:plant",
     },
 })
 --Enable tobacco to exist by making it drop from grass
@@ -143,7 +143,7 @@ for i = 1, 3 do
 	minetest.override_item("default:marram_grass_"..i, {drop = {
 		max_items = 1,
 		items = {
-			{items = {"civtobacco:seed_leaves"},rarity = 10},
+			{items = {"civtobacco:seed_plant"},rarity = 10},
 			{items = {"default:marram_grass_1"}},
 		}
 	}})
