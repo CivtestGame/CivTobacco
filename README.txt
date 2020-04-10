@@ -1,19 +1,15 @@
-====CivTobacco===
-Version 1.02
+====Tobbaco===
+Version 1.01
 
-Adds tobacco plant which can be dried and turned into cigarettes, snuff or chewed
-
-
-leaves(harvest) ---> cook(leaves) ---> cured leaves ---> paper+cured leaves ---> cigarette
-leaves(harvest) ---> 3 seeds
-cured leaves ---> snuff
-3 cigarette butts ---> cigarette
+Adds tobbaco plant which can be dried and turned into cigarettes, snuff or chewed
 
 Changelog:
 
 1.0: initial version with tabbaco
-1.01: adds snuff and cigarette butts and make sounds position based, add another sound for cigarette and made it produce more smoke, dried tobacco leaves can be chewed, capitalized names
-1.02:Cleaned code and made repeated processes into functions
+1.01: adds snuff and cigarette butts and make sounds position based, add another sound for cigarette and made it produce more smoke, dried tobbaco leaves can be chewed, capitalized names
+1.02: cleaned code and made it compact
+1.03: Added beedi, crafting groups, more advanced cigarette crafting, basic version of addiction
+
 Contact me at discord @The32bitguy#7553 for help, suggestions and bug reports
 
 ================================================================
