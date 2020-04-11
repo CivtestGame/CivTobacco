@@ -301,7 +301,7 @@ minetest.register_craft(
         type = "cooking",
         output = "civtobacco:plant_cured",
         recipe = "civtobacco:plant",
-        cooktime = 30
+        cooktime = 10
     }
 )
 
