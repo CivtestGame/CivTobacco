@@ -1,32 +1,25 @@
 -- Don't smoke. Nicotine is addictive and dangerous and tar from cigarettes even more so
-
 timer = 0
 --This checks players if they are addicted and if they have their fix
 minetest.register_globalstep(
     function(dtime)
         timer = timer + dtime
-        if timer > 30 then
+        if timer < 30 then return end --No need to run every step
             timer = 0
             for _, player in ipairs(minetest.get_connected_players()) do
                 local pmeta = player:get_meta()
-                if (pmeta:get_string("civtobacco:nicotine") == "depend") then
+                if pmeta:get_string("civtobacco:nicotine") == "depend"  then
                     --minetest.chat_send_all("nicotine you be addicted")
-                    tb_checkfix(player)
-                    if (pmeta:get_string("civtobacco:nicotine_fix") == "need") then
-                        minetest.chat_send_player(player:get_player_name(), tb_msg())
+                    if tb_checkfix(player) then 
+                        minetest.chat_send_player(player:get_player_name(), tb_symptoms()) --Flavour message to player
                         playerphysics.remove_physics_factor(player, "speed", "civtobacco")
                         hunger_spike(player)
-                        if (math.random(1, 20) == 5) then
+                        if math.random(1, 20) == 5 then --5% chance to lose addiction
                             pmeta:set_string("civtobacco:nicotine", "not")
                         end
-                    else
-                        --Player is not addicted
-                    end
-                else
-                    --minetest.chat_send_all("Debug nicotine not")
+                    end   
                 end
             end
-        end
     end
 )
 
@@ -45,13 +38,13 @@ farming.register_plant(
             optimum_heat = 65,
             heat_scaling = "exponential",
             heat_a = 10,
-            heat_b = 1.0,
+            heat_b = 1.1,
             heat_base_speed = 2500,
             variance = 500,
             optimum_humidity = 40,
             humidity_scaling = "exponential",
             humidity_a = 1.5,
-            humidity_b = 1,
+            humidity_b = 1.1,
             humidity_base_speed = 7500,
             variance = 2500
         },
@@ -69,7 +62,7 @@ minetest.register_craftitem(
             --Send player message with flavour text
             minetest.chat_send_player(player:get_player_name(), "You take the snuff up your nose")
             --Plays one sound at the player who snorted position
-            tbsmoke(0, player, "snuff")
+            tb_smoke(0, player, "snuff")
             tb_nicotine(player, 18, 1.50)
             itemstack:take_item()
             return itemstack
@@ -87,7 +80,7 @@ minetest.register_craftitem(
         on_use = function(itemstack, player, pointed_thing)
             --Flavour text
             minetest.chat_send_player(player:get_player_name(), "You smoke the cigarette")
-            tbsmoke(18, player, "smoke")
+            tb_smoke(18, player, "smoke")
             tb_nicotine(player, 22, 1.75)
             -- Replaces the cigarette with a recyclable waste product
             -- Takes cigarette
@@ -108,7 +101,7 @@ minetest.register_craftitem(
         on_use = function(itemstack, player, pointed_thing)
             --Flavour text
             minetest.chat_send_player(player:get_player_name(), "You smoke the beedi.")
-            tbsmoke(16, player, "smoke")
+            tb_smoke(16, player, "smoke")
             tb_nicotine(player, 28, 1.6)
             -- Replaces the beedi with a recyclable waste product
             -- Takes beddi
@@ -129,7 +122,7 @@ minetest.register_craftitem(
         on_use = function(itemstack, player, pointed_thing)
             --Flavour text
             minetest.chat_send_player(player:get_player_name(), "You smoke the cigar. It's a little loose")
-            tbsmoke(24, player, "smoke")
+            tb_smoke(24, player, "smoke")
             tb_nicotine(player, 20, 1.6)
             -- Takes cigar and gives butt
             itemstack:take_item()
@@ -150,7 +143,7 @@ minetest.register_craftitem(
             --Send player message with flavour text
             minetest.chat_send_player(player:get_player_name(), "You chew the tobacco")
             --Plays one sound at the player who chewed position
-            tbsmoke(0, player, "chew")
+            tb_smoke(0, player, "chew")
             tb_nicotine(player, 14, 1.3)
             itemstack:take_item()
             return itemstack
@@ -188,51 +181,40 @@ minetest.register_craftitem(
 --Functions
 
 --Smoke particle and sound function
-function tbsmoke(particles, smoker, sound)
+function tb_smoke(particles, player, sound)
     --Make some particles, the texture is only randomized per cigarette
     minetest.add_particlespawner(
         {
             amount = particles,
-            time = 1,
-            minpos = {x = smoker:get_pos().x, y = smoker:get_pos().y + 1.5, z = smoker:get_pos().z},
-            maxpos = {x = smoker:get_pos().x, y = smoker:get_pos().y + 1.5, z = smoker:get_pos().z},
+            time = 10,
+            attached = player,
+            minpos = {x = 0, y = 1.8, z = 0},
             minvel = {x = -0.1, y = 0, z = -0.1},
             maxvel = {x = 0.1, y = 0.1, z = 0.1},
             minacc = {x = 0, y = 0, z = 0},
             maxacc = {x = 0, y = 0, z = 0},
             minexptime = 10,
-            maxexptime = 15,
+            maxexptime = 25,
             minsize = 1,
             maxsize = 2,
             collisiondetection = true,
             vertical = false,
-            texture = "civtobacco_smoke." .. math.random(1, 3) .. ".png"
+            texture = "smoke_puff.png"
         }
     )
     minetest.sound_play(
         sound,
         {
-            pos = smoker:get_pos(),
+            pos = player:get_pos(),
             max_hear_distance = 12,
             gain = 5.0
         }
     )
 end
 
-function tb_msg() --Returns a message
-    local rnd = math.random(1, 4)
-    if rnd == 1 then
-        return "Your hands tremor"
-    end
-    if rnd == 2 then
-        return "You feel suddenly hungry."
-    end
-    if rnd == 3 then
-        return "Your crave tobacco"
-    end
-    if rnd == 4 then
-        return "You wouldn't mind a smoke right now"
-    end
+function tb_symptoms() --Returns a contextual prompt/chat message
+    local symptoms = {"Your hands tremor","You feel suddenly hungry","Your crave tobacco","You wouldnt mind a smoke right now","One of those chewing leaves would be nice"}
+    return symptoms[math.random(1,table.maxn(symptoms))]
 end
 
 --Put this function into an items on_use to give it nicotine properties
@@ -242,7 +224,6 @@ function tb_nicotine(player, chance, effect)
     local hp = player:get_hp()
     playerphysics.add_physics_factor(player, "speed", "civtobacco", effect)
     pmeta:set_int("civtobacco:nicotine_time", os.time()) --Sets time of last fix
-    pmeta:set_string("civtobacco:nicotine_fix", "not") --Got fix
     --Random chance to become addicted. Varies with effect
     if math.random(1, 100) <= chance then
         --minetest.chat_send_all("nicotine very oof")
@@ -260,15 +241,15 @@ end
 function tb_checkfix(player)
     local pmeta = player:get_meta()
     local elapsed = pmeta:get_int("civtobacco:nicotine_time") - os.time()
-    if (elapsed <= -300) then
-        pmeta:set_string("civtobacco:nicotine_fix", "need")
+    if elapsed <= -300 then
+        return true
+        else return false
     end
     --minetest.chat_send_all(elapsed)
 end
 
 --Randomly sets hunger down
 function hunger_spike(player)
-    local inv = player:get_inventory()
     local name = player:get_player_name()
     local value = hbhunger.hunger[name] + math.random(-9, -1)
     if value > 30 then
