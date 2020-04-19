@@ -1,5 +1,5 @@
 ====Tobbaco===
-Version 1.03
+Version 1.05
 
 Adds tobbaco plant which can be dried and turned into cigarettes, snuff or chewed
 
@@ -10,6 +10,7 @@ Changelog:
 1.02: cleaned code and made it compact
 1.03: Added beedi, crafting groups, more advanced cigarette crafting, basic version of addiction
 1.04: Updated depends.txt and sprites 
+1.05: Use player_monoids instead of playerphysics api
 
 Contact me at discord @The32bitguy#7553 for help, suggestions and bug reports
 

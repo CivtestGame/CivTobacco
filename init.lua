@@ -1,5 +1,6 @@
 -- Don't smoke. Nicotine is addictive and dangerous and tar from cigarettes even more so
 timer = 0
+local speed = player_monoids.speed
 --This checks players if they are addicted and if they have their fix
 minetest.register_globalstep(
     function(dtime)
@@ -12,7 +13,7 @@ minetest.register_globalstep(
                     --minetest.chat_send_all("nicotine you be addicted")
                     if tb_checkfix(player) then 
                         minetest.chat_send_player(player:get_player_name(), tb_symptoms()) --Flavour message to player
-                        playerphysics.remove_physics_factor(player, "speed", "civtobacco")
+                        if civtobbaco_speed ~= nil then speed:del_change(player, civtobbaco_speed) end
                         hunger_spike(player)
                         if math.random(1, 20) == 5 then --5% chance to lose addiction
                             pmeta:set_string("civtobacco:nicotine", "not")
@@ -222,7 +223,8 @@ function tb_nicotine(player, chance, effect)
     local stop = player
     local pmeta = player:get_meta()
     local hp = player:get_hp()
-    playerphysics.add_physics_factor(player, "speed", "civtobacco", effect)
+    if civtobbaco_speed ~= nil then speed:del_change(player, civtobbaco_speed) end
+    civtobbaco_speed = speed:add_change(player, effect)
     pmeta:set_int("civtobacco:nicotine_time", os.time()) --Sets time of last fix
     --Random chance to become addicted. Varies with effect
     if math.random(1, 100) <= chance then
@@ -231,7 +233,7 @@ function tb_nicotine(player, chance, effect)
         pmeta:set_string("civtobacco:nicotine", "depend")
     else
     minetest.after(300, function(stop) --Stops forever speed boost
-	    playerphysics.remove_physics_factor(player, "speed", "civtobacco")
+	    if civtobbaco_speed ~= nil then speed:del_change(player, civtobbaco_speed) end
     end)
         --minetest.chat_send_all("nicotine not oof")
     end
